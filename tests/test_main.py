@@ -1,4 +1,5 @@
 import pytest
+
 from main import Category
 
 
@@ -33,7 +34,10 @@ def test_product_count_multiple_products(sample_product, sample_product2):
     Category("Category 1", "Description 1", [sample_product, sample_product2])
     assert Category.product_count == 2
 
-def test_product_count_multiple_categories_and_products(sample_product, sample_product2):
-     Category("Category 1", "Description 1", [sample_product])
-     Category("Category 2", "Description 2", [sample_product, sample_product2])
-     assert Category.product_count == 3
+
+def test_product_count_multiple_categories_and_products(
+    sample_product, sample_product2
+):
+    Category("Category 1", "Description 1", [sample_product])
+    Category("Category 2", "Description 2", [sample_product, sample_product2])
+    assert Category.product_count == 3
