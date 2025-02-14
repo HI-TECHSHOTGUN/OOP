@@ -1,3 +1,32 @@
+class Product:
+    name: str
+    description: str
+    price: int
+    quantity: int
+
+    def __init__(self, name, description, price, quantity):
+        self.name = name
+        self.description = description
+        self.price = price
+        self.quantity = quantity
+
+class Category:
+    name: str
+    description: str
+    products: list
+    category_count = 0
+    product_count = 0
+
+    def __init__(self, name, description, products):
+        self.name = name
+        self.description = description
+        self.products = products
+        Category.category_count += 1
+        Category.product_count += len(products)
+
+
+
+
 if __name__ == "__main__":
     product1 = Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5)
     product2 = Product("Iphone 15", "512GB, Gray space", 210000.0, 8)
