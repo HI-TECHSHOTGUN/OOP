@@ -48,9 +48,11 @@ class Category:
         Category.product_count += len(self.__products) if products else 0
 
     def add_product(self, product):
-        self.__products.append(product)
-        Category.product_count += 1
-
+        if isinstance(product, Product):
+            self.__products.append(product)
+            Category.product_count += 1
+        else:
+            print('Можно добавлять только объекты класса Product.')
 
     @property
     def products(self):
