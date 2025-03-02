@@ -64,3 +64,40 @@ def test_category_with_products_creation():
     assert "Product 1, 50 руб. Остаток: 20 шт." in category.products
     assert "Product 2, 75 руб. Остаток: 15 шт." in category.products
     assert category.products == 'Product 1, 50 руб. Остаток: 20 шт. Product 2, 75 руб. Остаток: 15 шт. '
+
+
+def test_product_str():
+    product = Product('Молоко', 'Молоко 3,2%', 80, 15)
+    assert str(product) == 'Молоко, 80 руб. Остаток: 15 шт.'
+
+    product2 = Product('Хлеб','Хлеб дарницкий', 30, 0)
+    assert str(product2) == "Хлеб, 30 руб. Остаток: 0 шт."
+
+    product3 = Product('Яблоки','Яблоки голандские', 50, 100)
+    assert str(product3) == "Яблоки, 50 руб. Остаток: 100 шт."
+
+
+def test_product_add():
+    product1 = Product('Молоко','Молоко 3,2%', 80, 15)
+    product2 = Product("Хлеб",'Хлеб дарницкий', 30, 20)
+    assert product1 + product2 == 15 * 80 + 20 * 30 == 1800
+
+    product3 = Product("Яблоки",'', 50, 10)
+    product4 = Product("Груши",'', 70, 5)
+    assert product3 + product4 == 10 * 50 + 5 * 70 == 850
+
+    product5 = Product("Бананы",'бананы узбекистанские', 40, 0)
+    assert product1 + product5 == 15 * 80 + 0 * 40 == 1200
+
+
+def test_category_str_single_product():
+    product = Product("Яблоки",'яблоки сердобские', 50, 10)
+    category = Category("Фрукты", 'Фрукты содержат много витамин', [product])
+    assert str(category) == "Фрукты, количество продуктов: 10 шт."
+
+
+def test_category_str_with_zero_quantity_products():
+    product1 = Product("Вода",'вода негазированная', 20, 5)
+    product2 = Product("Сок яблочный", 'натуральный сок', 50, 0)
+    category = Category("Напитки", 'Напитки газ/негаз, соки', [product1, product2])
+    assert str(category) == "Напитки, количество продуктов: 5 шт."
