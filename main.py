@@ -11,21 +11,21 @@ class Product:
         self.quantity = quantity
 
     def __str__(self):
-        return f'{self.name}, {self.price} руб. Остаток: {self.quantity} шт.'
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
-        if isinstance(type(other), Product):
+        if isinstance(other, self.__class__):
             return self.quantity * self.price + other.quantity * other.price
-
-        raise TypeError
+        else:
+            raise TypeError
 
     @classmethod
     def new_product(cls, _dict):
         try:
-            name = _dict['name']
-            description = _dict['description']
-            price = _dict['price']
-            quantity = _dict['quantity']
+            name = _dict["name"]
+            description = _dict["description"]
+            price = _dict["price"]
+            quantity = _dict["quantity"]
             return cls(name, description, price, quantity)
         except KeyError as e:
             return f"KeyError: {e}"
@@ -58,45 +58,81 @@ class Category:
 
     def __str__(self):
         total_quantity = sum(i.quantity for i in self.__products)
-        return f'{self.name}, количество продуктов: {total_quantity} шт.'
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def add_product(self, product):
         if isinstance(product, Product):
             self.__products.append(product)
             Category.product_count += 1
         else:
-            print('Можно добавлять только объекты класса Product.')
+            raise TypeError
 
     @property
     def products(self):
-        result = ''
+        result = ""
         for i in self.__products:
-            result += f'{i.name}, {i.price} руб. Остаток: {i.quantity} шт. '
+            result += f"{i.name}, {i.price} руб. Остаток: {i.quantity} шт. "
         return result
 
 
 class Smartphone(Product):
-    def __init__(self, name, description, price, quantity, efficiency, model, memory, color):
+    def __init__(
+        self, name, description, price, quantity, efficiency, model, memory, color
+    ):
         super().__init__(name, description, price, quantity)
         self.efficiency = efficiency
         self.model = model
         self.memory = memory
         self.color = color
 
+    def __add__(self, other):
+        if issubclass(type(other), self.__class__):
+            return self.quantity * self.price + other.quantity * other.price
+
+        else:
+            raise TypeError
+
 
 class LawnGrass(Product):
-    def __init__(self, name, description, price, quantity, country, germination_period, color):
+    def __init__(
+        self, name, description, price, quantity, country, germination_period, color
+    ):
         super().__init__(name, description, price, quantity)
         self.country = country
         self.germination_period = germination_period
         self.color = color
 
+    def __add__(self, other):
+        if issubclass(type(other), self.__class__):
+            return self.quantity * self.price + other.quantity * other.price
+        else:
+            raise TypeError
 
-if __name__ == '__main__':
-    smartphone1 = Smartphone("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5, 95.5,
-                         "S23 Ultra", 256, "Серый")
-    smartphone2 = Smartphone("Iphone 15", "512GB, Gray space", 210000.0, 8, 98.2, "15", 512, "Gray space")
-    smartphone3 = Smartphone("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14, 90.3, "Note 11", 1024, "Синий")
+
+if __name__ == "__main__":
+    smartphone1 = Smartphone(
+        "Samsung Galaxy S23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        95.5,
+        "S23 Ultra",
+        256,
+        "Серый",
+    )
+    smartphone2 = Smartphone(
+        "Iphone 15", "512GB, Gray space", 210000.0, 8, 98.2, "15", 512, "Gray space"
+    )
+    smartphone3 = Smartphone(
+        "Xiaomi Redmi Note 11",
+        "1024GB, Синий",
+        31000.0,
+        14,
+        90.3,
+        "Note 11",
+        1024,
+        "Синий",
+    )
 
     print(smartphone1.name)
     print(smartphone1.description)
@@ -125,8 +161,24 @@ if __name__ == '__main__':
     print(smartphone3.memory)
     print(smartphone3.color)
 
-    grass1 = LawnGrass("Газонная трава", "Элитная трава для газона", 500.0, 20, "Россия", "7 дней", "Зеленый")
-    grass2 = LawnGrass("Газонная трава 2", "Выносливая трава", 450.0, 15, "США", "5 дней", "Темно-зеленый")
+    grass1 = LawnGrass(
+        "Газонная трава",
+        "Элитная трава для газона",
+        500.0,
+        20,
+        "Россия",
+        "7 дней",
+        "Зеленый",
+    )
+    grass2 = LawnGrass(
+        "Газонная трава 2",
+        "Выносливая трава",
+        450.0,
+        15,
+        "США",
+        "5 дней",
+        "Темно-зеленый",
+    )
 
     print(grass1.name)
     print(grass1.description)
@@ -157,8 +209,12 @@ if __name__ == '__main__':
     else:
         print("Не возникла ошибка TypeError при попытке сложения")
 
-    category_smartphones = Category("Смартфоны", "Высокотехнологичные смартфоны", [smartphone1, smartphone2])
-    category_grass = Category("Газонная трава", "Различные виды газонной травы", [grass1, grass2])
+    category_smartphones = Category(
+        "Смартфоны", "Высокотехнологичные смартфоны", [smartphone1, smartphone2]
+    )
+    category_grass = Category(
+        "Газонная трава", "Различные виды газонной травы", [grass1, grass2]
+    )
 
     category_smartphones.add_product(smartphone3)
 
