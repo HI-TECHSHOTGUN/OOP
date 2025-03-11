@@ -89,8 +89,8 @@ def test_product_str():
     product = Product("Молоко", "Молоко 3,2%", 80, 15)
     assert str(product) == "Молоко, 80 руб. Остаток: 15 шт."
 
-    product2 = Product("Хлеб", "Хлеб дарницкий", 30, 0)
-    assert str(product2) == "Хлеб, 30 руб. Остаток: 0 шт."
+    with pytest.raises(ValueError):
+        product2 = Product("Хлеб", "Хлеб дарницкий", 30, 0)
 
     product3 = Product("Яблоки", "Яблоки голандские", 50, 100)
     assert str(product3) == "Яблоки, 50 руб. Остаток: 100 шт."
@@ -105,8 +105,8 @@ def test_product_add():
     product4 = Product("Груши", "", 70, 5)
     assert product3 + product4 == 10 * 50 + 5 * 70 == 850
 
-    product5 = Product("Бананы", "бананы узбекистанские", 40, 0)
-    assert product1 + product5 == 15 * 80 + 0 * 40 == 1200
+    with pytest.raises(ValueError):
+        product5 = Product("Бананы", "бананы узбекистанские", 40, 0)
 
 
 def test_category_str_single_product():
@@ -117,21 +117,18 @@ def test_category_str_single_product():
 
 def test_category_str_with_zero_quantity_products():
     product1 = Product("Вода", "вода негазированная", 20, 5)
-    product2 = Product("Сок яблочный", "натуральный сок", 50, 0)
+    product2 = Product("Сок яблочный", "натуральный сок", 50, 2)
     category = Category("Напитки", "Напитки газ/негаз, соки", [product1, product2])
-    assert str(category) == "Напитки, количество продуктов: 5 шт."
+    assert str(category) == "Напитки, количество продуктов: 7 шт."
+
+    with pytest.raises(ValueError):
+        product3 = Product("Сок яблочный", "натуральный сок", 50, 0)
 
 
 def test_add_two_products():
     product1 = Product("Product A", "Desc A", 10, 2)
     product2 = Product("Product B", "Desc B", 5, 3)
     assert product1 + product2 == 35
-
-
-def test_add_zero_quantity():
-    product1 = Product("Product A", "Desc A", 10, 0)
-    product2 = Product("Product B", "Desc B", 5, 3)
-    assert product1 + product2 == 15
 
 
 def test_add_zero_price():
@@ -311,6 +308,6 @@ def test_add_smartphone_and_none():
 
 
 def test_print_mixin(capsys):
-    Product("Сок яблочный", "натуральный сок", 50, 0)
+    Product("Сок яблочный", "натуральный сок", 50, 1)
     message = capsys.readouterr()
-    assert message.out.strip() == "Product(Сок яблочный, натуральный сок, 50, 0)"
+    assert message.out.strip() == "Product(Сок яблочный, натуральный сок, 50, 1)"
