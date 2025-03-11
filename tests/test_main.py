@@ -1,3 +1,5 @@
+from pyexpat.errors import messages
+
 import pytest
 
 from main import Category, LawnGrass, Product, Smartphone
@@ -21,7 +23,9 @@ def test_product_price_setter_invalid(capsys):
     product = Product("Test Product", "Test Description", 100, 10)
     product.price = -50
     captured = capsys.readouterr()
-    assert captured.out == "Цена не должна быть нулевая или отрицательная\n"
+    assert (
+        captured.out.split("\n")[-2] == "Цена не должна быть нулевая или отрицательная"
+    )
     assert product.price == 100
 
 
@@ -304,3 +308,9 @@ def test_add_smartphone_and_none():
     )
     with pytest.raises(TypeError):
         smartphone + None
+
+
+def test_print_mixin(capsys):
+    Product("Сок яблочный", "натуральный сок", 50, 0)
+    message = capsys.readouterr()
+    assert message.out.strip() == "Product(Сок яблочный, натуральный сок, 50, 0)"
